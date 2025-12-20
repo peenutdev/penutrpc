@@ -1,34 +1,33 @@
 import * as vscode from 'vscode';
 import { Client } from '@xhayper/discord-rpc';
 
-const clientId = 'YOUR_DISCORD_APP_ID'; // This will be replaced by user config
 let rpcClient: Client | null = null;
 let startTimestamp: number = Date.now();
 let activityUpdateInterval: NodeJS.Timeout | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('miyauw\'s simple discord rpc extension is now active!');
+    console.log('Peanut Presence extension is now active!');
 
     // Initialize start timestamp (persists across file changes)
     startTimestamp = Date.now();
 
     // Register commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('simplerpc.enable', () => {
-            vscode.workspace.getConfiguration('simplerpc').update('enabled', true, true);
+        vscode.commands.registerCommand('peanutpresence.enable', () => {
+            vscode.workspace.getConfiguration('peanutpresence').update('enabled', true, true);
             connectToDiscord();
         })
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('simplerpc.disable', () => {
-            vscode.workspace.getConfiguration('simplerpc').update('enabled', false, true);
+        vscode.commands.registerCommand('peanutpresence.disable', () => {
+            vscode.workspace.getConfiguration('peanutpresence').update('enabled', false, true);
             disconnectFromDiscord();
         })
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('simplerpc.reconnect', () => {
+        vscode.commands.registerCommand('peanutpresence.reconnect', () => {
             disconnectFromDiscord();
             setTimeout(() => connectToDiscord(), 1000);
         })
@@ -37,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Listen for configuration changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
-            if (e.affectsConfiguration('simplerpc')) {
+            if (e.affectsConfiguration('peanutpresence')) {
                 disconnectFromDiscord();
                 setTimeout(() => connectToDiscord(), 1000);
             }
@@ -63,11 +62,11 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function connectToDiscord() {
-    const config = vscode.workspace.getConfiguration('simplerpc');
+    const config = vscode.workspace.getConfiguration('peanutpresence');
     const enabled = config.get<boolean>('enabled', true);
 
     if (!enabled) {
-        console.log('miyauw\'s simple discord rpc is disabled');
+        console.log('Peanut Presence is disabled');
         return;
     }
 
@@ -75,17 +74,21 @@ async function connectToDiscord() {
 
     if (!appId) {
         vscode.window.showWarningMessage(
-            'miyauw\'s simple discord rpc: Please set your Discord Application ID in settings',
+            'Peanut Presence: Please set your Discord Application ID in settings',
             'Open Settings'
         ).then(selection => {
             if (selection === 'Open Settings') {
-                vscode.commands.executeCommand('workbench.action.openSettings', 'simplerpc.applicationId');
+                vscode.commands.executeCommand('workbench.action.openSettings', 'peanutpresence.applicationId');
             }
         });
         return;
     }
 
     try {
+        if (rpcClient) {
+            disconnectFromDiscord();
+        }
+
         rpcClient = new Client({ clientId: appId });
 
         rpcClient.on('ready', () => {
@@ -112,7 +115,7 @@ async function connectToDiscord() {
         await rpcClient.login();
     } catch (error) {
         console.error('Failed to connect to Discord:', error);
-        vscode.window.showErrorMessage(`miyauw's simple discord rpc: Failed to connect to Discord - ${error}`);
+        vscode.window.showErrorMessage(`Peanut Presence: Failed to connect to Discord - ${error}`);
     }
 }
 
@@ -123,8 +126,12 @@ function disconnectFromDiscord() {
     }
 
     if (rpcClient) {
-        rpcClient.user?.clearActivity();
-        rpcClient.destroy();
+        try {
+            rpcClient.user?.clearActivity();
+            rpcClient.destroy();
+        } catch (e) {
+            console.error('Error during disconnect:', e);
+        }
         rpcClient = null;
         console.log('Disconnected from Discord RPC');
     }
@@ -139,19 +146,20 @@ async function updateActivity() {
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
 
     // Get current file info
-    let fileName = 'No file open';
+    let fileName = 'Idle';
     let fileType = '';
 
     if (editor) {
         const document = editor.document;
-        fileName = document.fileName.split('/').pop() || 'Unknown file';
+        // Improved file name extraction
+        fileName = document.fileName.replace(/\\/g, '/').split('/').pop() || 'Unknown file';
         fileType = document.languageId;
     }
 
     // Get workspace name
     const workspaceName = workspaceFolder?.name || 'No workspace';
 
-    const config = vscode.workspace.getConfiguration('simplerpc');
+    const config = vscode.workspace.getConfiguration('peanutpresence');
 
     // Get image configuration
     const largeImageKey = config.get<string>('largeImageKey', 'vscode');
@@ -161,7 +169,7 @@ async function updateActivity() {
 
     // Build base activity
     const activity: any = {
-        details: `Editing ${fileName}`,
+        details: editor ? `Editing ${fileName}` : 'Idle',
         state: `Workspace: ${workspaceName}`,
         startTimestamp: startTimestamp,
         largeImageKey: largeImageKey,
@@ -192,7 +200,8 @@ async function updateActivity() {
         console.log('Activity set successfully');
     } catch (error) {
         console.error('Failed to set activity:', error);
-        vscode.window.showErrorMessage(`miyauw's simple discord rpc: Failed to update activity - ${error}`);
+        // Don't show error message every time it fails to avoid spamming the user
+        // but maybe log it to the output channel if we had one.
     }
 }
 

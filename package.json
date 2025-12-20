@@ -1,9 +1,13 @@
 {
-  "name": "simplerpc",
-  "displayName": "miyauw's simple discord rpc",
-  "description": "miyauw's simple Discord Rich Presence extension for VS Code with customizable features",
+  "name": "peanut-presence",
+  "displayName": "Peanut Presence",
+  "description": "A simple and customizable Discord Rich Presence extension for VS Code.",
   "version": "1.0.0",
-  "publisher": "miyauwdev",
+  "publisher": "peanutdev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KuzeyMurathan/peanut-presence.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -16,58 +20,58 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "miyauw's simple discord rpc",
+      "title": "Peanut Presence",
       "properties": {
-        "simplerpc.applicationId": {
+        "peanutpresence.applicationId": {
           "type": "string",
           "default": "",
-          "description": "A super simple extension to add Discord Rich Presence to your VSCode",
+          "description": "The Discord Application ID for your rich presence.",
           "order": 0
         },
-        "simplerpc.largeImageKey": {
+        "peanutpresence.largeImageKey": {
           "type": "string",
           "default": "vscode",
-          "description": "The key for the large image asset",
+          "description": "The key for the large image asset.",
           "order": 1
         },
-        "simplerpc.largeImageText": {
+        "peanutpresence.largeImageText": {
           "type": "string",
           "default": "Visual Studio Code",
-          "description": "The tooltip text for the large image",
+          "description": "The tooltip text for the large image.",
           "order": 2
         },
-        "simplerpc.smallImageKey": {
+        "peanutpresence.smallImageKey": {
           "type": "string",
           "default": "",
-          "description": "The key for the small image asset (leave empty to use file type icon)",
+          "description": "The key for the small image asset (leave empty to use file type icon).",
           "order": 3
         },
-        "simplerpc.smallImageText": {
+        "peanutpresence.smallImageText": {
           "type": "string",
           "default": "",
-          "description": "The tooltip text for the small image",
+          "description": "The tooltip text for the small image.",
           "order": 4
         },
-        "simplerpc.enabled": {
+        "peanutpresence.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable or disable Discord Rich Presence",
+          "description": "Enable or disable Peanut Presence.",
           "order": 5
         }
       }
     },
     "commands": [
       {
-        "command": "simplerpc.enable",
-        "title": "miyauw's simple discord rpc: Enable"
+        "command": "peanutpresence.enable",
+        "title": "Peanut Presence: Enable"
       },
       {
-        "command": "simplerpc.disable",
-        "title": "miyauw's simple discord rpc: Disable"
+        "command": "peanutpresence.disable",
+        "title": "Peanut Presence: Disable"
       },
       {
-        "command": "simplerpc.reconnect",
-        "title": "miyauw's simple discord rpc: Reconnect"
+        "command": "peanutpresence.reconnect",
+        "title": "Peanut Presence: Reconnect"
       }
     ]
   },

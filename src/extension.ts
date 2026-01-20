@@ -196,12 +196,6 @@ async function updateActivity() {
 
     const config = vscode.workspace.getConfiguration('peanutpresence');
 
-    // Get image configuration
-    const largeImageKey = config.get<string>('largeImageKey', 'vscode');
-    const largeImageText = config.get<string>('largeImageText', 'Visual Studio Code');
-    const smallImageKey = config.get<string>('smallImageKey', '');
-    const smallImageText = config.get<string>('smallImageText', '');
-
     // Get button configuration
     const buttonLabel = config.get<string>('buttonLabel', '');
     const buttonUrl = config.get<string>('buttonUrl', '');
@@ -211,8 +205,10 @@ async function updateActivity() {
         details: editor ? `Editing ${fileName}` : 'Idle',
         state: `Workspace: ${workspaceName}`,
         startTimestamp: startTimestamp,
-        largeImageKey: largeImageKey,
-        largeImageText: largeImageText,
+        largeImageKey: 'vscode',
+        largeImageText: 'Visual Studio Code',
+        smallImageKey: fileType,
+        smallImageText: fileType.toUpperCase(),
         instance: false,
         type: 0
     };
@@ -223,17 +219,6 @@ async function updateActivity() {
         activity.buttons = [
             { label: buttonLabel, url: buttonUrl }
         ];
-    }
-
-    // Handle small image
-    if (smallImageKey) {
-        // User specified a custom small image
-        activity.smallImageKey = smallImageKey;
-        activity.smallImageText = smallImageText;
-    } else if (fileType) {
-        // Fallback to file type icon if no custom small image is set
-        activity.smallImageKey = fileType;
-        activity.smallImageText = fileType.toUpperCase();
     }
 
     try {

@@ -6,7 +6,7 @@
   "publisher": "peanutdev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KuzeyMurathan/miyauws-discord-rpc.git"
+    "url": "https://github.com/peenutdev/penutrpc.git"
   },
   "engines": {
     "vscode": "^1.80.0"
@@ -28,47 +28,24 @@
           "description": "The Discord Application ID for your rich presence.",
           "order": 0
         },
-        "peanutpresence.largeImageKey": {
-          "type": "string",
-          "default": "vscode",
-          "description": "The key for the large image asset.",
-          "order": 1
-        },
-        "peanutpresence.largeImageText": {
-          "type": "string",
-          "default": "Visual Studio Code",
-          "description": "The tooltip text for the large image.",
-          "order": 2
-        },
-        "peanutpresence.smallImageKey": {
-          "type": "string",
-          "default": "",
-          "description": "The key for the small image asset (leave empty to use file type icon).",
-          "order": 3
-        },
-        "peanutpresence.smallImageText": {
-          "type": "string",
-          "default": "",
-          "description": "The tooltip text for the small image.",
-          "order": 4
-        },
+
         "peanutpresence.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable Peanut Presence.",
-          "order": 5
+          "order": 0
         },
         "peanutpresence.buttonLabel": {
           "type": "string",
           "default": "GitHub",
           "description": "The label for the button on your Rich Presence.",
-          "order": 6
+          "order": 1
         },
         "peanutpresence.buttonUrl": {
           "type": "string",
-          "default": "https://github.com/KuzeyMurathan/penutrpc/releases/tag/Release",
+          "default": "https://github.com/peenutdev/penutrpc/releases/tag/Release",
           "description": "The URL for the button on your Rich Presence.",
-          "order": 7
+          "order": 2
         }
       }
     },
